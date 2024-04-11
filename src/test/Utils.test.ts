@@ -1,4 +1,4 @@
-import { getStringInfo, toUpperCase } from '../app/Utils';
+import { StringUtils, getStringInfo, toUpperCase } from '../app/Utils';
 
 describe('Utils its suite', () => {
   it('should return uppercase of valid string', () => {
@@ -79,4 +79,58 @@ describe('Utils its suite', () => {
       expect(actual).toBe(expected);
     });
   })
+
+  // Hooks
+  describe('Hooks> StringUtils tests', () => {
+    let sut: StringUtils;
+
+    beforeEach(() => {
+      sut = new StringUtils();
+      console.log('Setup');
+    });
+
+    afterEach(() => {
+      // clearing mocks
+      console.log('Teardown');
+    });
+
+    it('should return correct uppercase', () => {
+      const sut = new StringUtils();
+
+      const actual = sut.toUpperCase('hello');
+      const expected = 'HELLO';
+
+      expect(actual).toBe(expected);
+      console.log('Actual test');
+    });
+  });
+
+  // Errors
+  describe.only('Errors> StringUtils tests', () => {
+    let sut: StringUtils;
+
+    beforeEach(() => {
+      sut = new StringUtils();
+      console.log('Setup');
+    });
+
+    it('should throw error on invalid argument - function', () => {
+      function expectError() {
+        const actual = sut.toUpperCase('');
+      }
+      expect(expectError).toThrow('Invalid argument');
+    });
+    it('should throw error on invalid argument - arrow function', () => {
+      expect(() => sut.toUpperCase('')).toThrow('Invalid argument');
+    });
+    it('should throw error on invalid argument - try catch block', () => { // kind of test not recommend
+      try {
+        sut.toUpperCase('');
+        // needs to add fail('message') or done('message') for that works
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toHaveProperty('message', 'Invalid argument');
+      }
+    });
+  });
 });

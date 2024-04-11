@@ -6,6 +6,15 @@ export type stringInfo = {
   extraInfo: Object | undefined;
 }
 
+export class StringUtils {
+  public toUpperCase(arg: string): string {
+    if (!arg) {
+      throw new Error('Invalid argument');
+    }
+    return toUpperCase(arg);
+  }
+}
+
 export function getStringInfo(arg: string): stringInfo {
   return {
     lowerCase: arg.toLowerCase(),
