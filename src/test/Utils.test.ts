@@ -106,7 +106,7 @@ describe('Utils its suite', () => {
   });
 
   // Errors
-  describe.only('Errors> StringUtils tests', () => {
+  describe('Errors> StringUtils tests', () => {
     let sut: StringUtils;
 
     beforeEach(() => {
