@@ -38,7 +38,6 @@ describe('Utils its suite', () => {
 
   // Better approach
   describe('getStringInfo for arg My-String should', () => {
-
     it('return right length', () => {
       const actual = getStringInfo('My-String'); // add tha actual variable to let test isolated
       expect(actual.characters).toHaveLength(9);
@@ -63,10 +62,21 @@ describe('Utils its suite', () => {
       const actual = getStringInfo('My-String');
       expect(actual.extraInfo).toBeDefined();
     });
-
     it('return right extra info', () => {
       const actual = getStringInfo('My-String');
       expect(actual.extraInfo).toEqual({})
     });
   });
+
+  // Add many arguments
+  describe('ToUpperCase examples', () => {
+    it.each([
+      { input: 'abc', expected: 'ABC' },
+      { input: 'My-String', expected: 'MY-STRING' },
+      { input: 'def', expected: 'DEF' }
+    ])('$input toUpperCase should be $expected', ({ input, expected }) => {
+      const actual = toUpperCase(input);
+      expect(actual).toBe(expected);
+    });
+  })
 });
