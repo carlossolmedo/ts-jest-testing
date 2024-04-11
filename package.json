@@ -4,7 +4,8 @@
   "description": "Complete tests with TypeScript, Node.JS and Jest",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "Carlos Olmedo",
