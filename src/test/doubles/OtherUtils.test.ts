@@ -1,4 +1,4 @@
-import { StringInfo, calculateComplexity } from '../../app/doubles/OtherUtils';
+import { StringInfo, calculateComplexity, toUpperCaseWithCb } from '../../app/doubles/OtherUtils';
 
 describe('OtherUtils test suite', () => {
   describe('calculateComplexity', () => {
@@ -7,7 +7,7 @@ describe('OtherUtils test suite', () => {
     });
     it('should return the number of complexity', () => {
       // stub variable
-      const someInfo: Partial<StringInfo> = {
+      const someInfo: Pick<StringInfo, 'length' | 'extraInfo'> = {
         length: 5,
         extraInfo: {
           field1: 'someInfo',
@@ -19,6 +19,20 @@ describe('OtherUtils test suite', () => {
       const expected = 10;
 
       expect(actual).toBe(expected);
+    });
+  });
+
+  describe('toUpperCaseWithCb', () => {
+    it('should be defined', () => {
+      expect(toUpperCaseWithCb).toBeDefined();
+    });
+    it('should call the callback for invalid argument return undefined', () => {
+      const actual = toUpperCaseWithCb('', () => { }); // fake callback
+      expect(actual).toBeUndefined();
+    });
+    it('should call the callback for valid argument return the upper cased string', () => {
+      const actual = toUpperCaseWithCb('abc', () => { });
+      expect(actual).toBe('ABC');
     });
   });
 });
