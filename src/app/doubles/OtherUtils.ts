@@ -20,3 +20,17 @@ export function toUpperCaseWithCb(arg: string, callBack: LoggerServiceCallBack) 
   callBack(`called toUpperCaseWithCb with ${arg}`);
   return arg.toUpperCase();
 }
+
+export class OtherStringUtils {
+  public toUpperCase(arg: string) {
+    return arg.toUpperCase();
+  }
+
+  public logString(arg: string) {
+    console.log(arg);
+  }
+
+  private callExternalService() {
+    console.log('called external service');
+  }
+}
