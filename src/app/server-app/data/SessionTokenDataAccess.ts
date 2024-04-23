@@ -1,6 +1,5 @@
 import { Account, SessionToken } from "../model/AuthModel";
 import { DataBase } from "./DataBase";
-import { generateRandomId } from "./IdGenerator";
 
 
 export class SessionTokenDataAccess {
@@ -8,7 +7,7 @@ export class SessionTokenDataAccess {
     private sessionTokensDataBase = new DataBase<SessionToken>();
 
     public async generateToken(user: Account) {
-        const tokenId =  await this.sessionTokensDataBase.insert({
+        const tokenId = await this.sessionTokensDataBase.insert({
             id: '',
             userName: user.userName,
             valid: true,
@@ -18,12 +17,12 @@ export class SessionTokenDataAccess {
         return tokenId;
     }
 
-    public async invalidateToken(tokenId: string){
+    public async invalidateToken(tokenId: string) {
         await this.sessionTokensDataBase.update(tokenId, 'valid', false);
     }
 
     public async isValidToken(tokenId: string) {
-        console.log(`Quering for ${tokenId} into the database`);
+        console.log(`Querying for ${tokenId} into the database`);
         const sessionToken = await this.sessionTokensDataBase.getBy(
             'id',
             tokenId

@@ -17,7 +17,7 @@ jest.mock('uuid', () => ({
 
 import * as OtherUtils from '../../app/doubles/OtherUtils';
 
-describe.skip('Mocking OtherUtils module', () => {
+describe('Mocking OtherUtils module', () => {
   it('should mock calculateComplexity', () => {
     const result = OtherUtils.calculateComplexity({} as any);
     expect(result).toBe(10);

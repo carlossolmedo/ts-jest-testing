@@ -7,7 +7,7 @@ type SomeTypeWithId = {
   color: string;
 }
 
-describe.skip('DataBase test suite', () => {
+describe('DataBase test suite', () => {
   let sut: DataBase<SomeTypeWithId>;
   const fakeId = '1234';
   const fakeObject = {
