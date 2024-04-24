@@ -53,6 +53,5 @@ describe('RegisterHandler test suite', () => {
       { 'Content-Type': 'application/json' }
     );
     expect(responseMock.write).toHaveBeenCalledWith(JSON.stringify({ userId: fakeId }));
-    // expect(authorizerMock.registerUser).toHaveBeenCalledWith(fakeAccount);
   });
 });
