@@ -1,19 +1,37 @@
 import { Authorizer } from '../../../app/server-app/auth/Authorizer';
+import { SessionTokenDataAccess } from '../../../app/server-app/data/SessionTokenDataAccess';
+import { UserCredentialsDataAccess } from '../../../app/server-app/data/UserCredentialsDataAccess';
 import { Account } from '../../../app/server-app/model/AuthModel';
 
-jest.mock('../../../app/server-app/data/SessionTokenDataAccess');
-jest.mock('../../../app/server-app/data/UserCredentialsDataAccess');
+// SessionTokenDataAccess mocks
+const isValidTokenMock = jest.fn();
+const generateTokenMock = jest.fn();
+const invalidateTokenMock = jest.fn();
+jest.mock('../../../app/server-app/data/SessionTokenDataAccess', () => {
+  return {
+    SessionTokenDataAccess: jest.fn().mockImplementation(() => {
+      return {
+        isValidToken: isValidTokenMock,
+        generateToken: generateTokenMock,
+        invalidateToken: invalidateTokenMock
+      }
+    })
+  }
+});
 
-const sessionTokenDataAccessMock: any = {
-  isValidToken: jest.fn(),
-  generateToken: jest.fn(),
-  invalidateToken: jest.fn(),
-};
-
-const userCredentialsDataAccessMock: any = {
-  addUser: jest.fn(),
-  getUserByUserName: jest.fn(),
-};
+// UserCredentialsDataAccess mocks:
+const addUserMock = jest.fn();
+const getUserByUserNameMock = jest.fn();
+jest.mock('../../../app/server-app/data/UserCredentialsDataAccess', () => {
+  return {
+    UserCredentialsDataAccess: jest.fn().mockImplementation(() => {
+      return {
+        addUser: addUserMock,
+        getUserByUserName: getUserByUserNameMock
+      }
+    })
+  }
+});
 
 const fakeTokenId = '1234';
 const fakeUser: Account = {
@@ -27,6 +45,8 @@ describe('Authorizer test suite', () => {
 
   beforeEach(() => {
     sut = new Authorizer();
+    expect(SessionTokenDataAccess).toHaveBeenCalledTimes(1);
+    expect(UserCredentialsDataAccess).toHaveBeenCalledTimes(1);
   });
 
   afterEach(() => {
@@ -36,8 +56,41 @@ describe('Authorizer test suite', () => {
   it('should be defined', () => {
     expect(sut).toBeDefined();
   });
-  it.todo('should validate token');
-  it.todo('should register user');
-  it.todo('should login user');
-  it.todo('should logout user');
+  it('should validate token', async () => {
+    isValidTokenMock.mockResolvedValueOnce(false);
+
+    const actual = await sut.validateToken(fakeTokenId);
+
+    expect(actual).toBe(false);
+  });
+  it('should register user', async () => {
+    addUserMock.mockResolvedValueOnce(fakeTokenId);
+
+    const actual = await sut.registerUser(fakeUser.userName, fakeUser.password);
+
+    expect(actual).toBe(fakeTokenId);
+    expect(addUserMock).toHaveBeenCalledWith(fakeUser);
+  });
+  it('should login user', async () => {
+    getUserByUserNameMock.mockResolvedValueOnce(fakeUser);
+    generateTokenMock.mockResolvedValueOnce(fakeTokenId);
+
+    const actual = await sut.login(fakeUser.userName, fakeUser.password);
+
+    expect(actual).toBe(fakeTokenId);
+    expect(getUserByUserNameMock).toHaveBeenCalledWith(fakeUser.userName);
+    expect(generateTokenMock).toHaveBeenCalledWith(fakeUser);
+  });
+  it('should return undefined for invalid user', async () => {
+    getUserByUserNameMock.mockResolvedValueOnce(fakeUser);
+
+    const actual = await sut.login('invalidUserName', fakeUser.password);
+    expect(actual).toBeUndefined();
+  });
+  it('should logout user and invalidate token', async () => {
+    await sut.logout(fakeTokenId);
+
+    expect(invalidateTokenMock).toHaveBeenCalledTimes(1);
+    expect(invalidateTokenMock).toHaveBeenCalledWith(fakeTokenId);
+  });
 });
